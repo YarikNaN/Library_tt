@@ -1,0 +1,70 @@
+{% extends 'account/layout.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <h1>Books List</h1>
+
+    {% if books_list %}
+    <ul>
+        {% for book in books_list %}
+        <li>
+            <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{ book.author }})
+            {% if book.id in taken_books_ids %}
+                <form action="{% url 'return_book' book.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Return Book</button>
+                </form>
+            {% else %}
+                <form action="{% url 'take_book' book.id %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Take Book</button>
+                </form>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+      <p>There are no books in the library.</p>
+    {% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#{% extends 'account/layout.html' %}#}
+{#{% load static %}#}
+{##}
+{##}
+{#{% block title %}Dashboard{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    <h1>Books List</h1>#}
+{#    <h1>{{ taken.0.reader_id }}</h1>#}
+{#    <h1>{{ user.id }}</h1>#}
+{##}
+{#    {% if books_list %}#}
+{#    <ul>#}
+{##}
+{#      {% for book in books_list %}#}
+{#      <li>#}
+{#        <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{book.author}})#}
+{#      </li>#}
+{#      {% endfor %}#}
+{##}
+{#    </ul>#}
+{#    {% else %}#}
+{#      <p>There are no books in the library.</p>#}
+{#    {% endif %}#}
+{#{% endblock %}#}
