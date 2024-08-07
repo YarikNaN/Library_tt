@@ -1,5 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render
+from django.utils import timezone
 
 from account.models import Books, TakenBooks
 
@@ -21,6 +22,27 @@ def return_book(request, book_id):
     user = request.user
     TakenBooks.objects.filter(reader_id=user.id, book_id=book_id).delete()
     return redirect('books')  # Redirect back to the book list
+
+
+class MyBooksListView(generic.ListView):
+    model = TakenBooks
+    template_name = 'reader/mybooks.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        taken_books = TakenBooks.objects.filter(reader_id=user.id).order_by('book__title')
+        now = timezone.now()
+        # Добавляем количество дней в контекст
+        context['taken_books_with_days'] = [
+            {
+                'book': taken_book.book,
+                'taken_date': taken_book.taken_date,
+                'days_on_hand': (now - taken_book.taken_date).days
+            }
+            for taken_book in taken_books
+        ]
+        return context
 
 class BookListView(generic.ListView):
     model = Books

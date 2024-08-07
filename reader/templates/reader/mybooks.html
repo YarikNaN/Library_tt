@@ -1,0 +1,30 @@
+{% extends 'account/layout.html' %}
+{% load static %}
+
+{% block title %}Мои книги{% endblock %}
+
+{% block content %}
+
+<a href="{% url 'books' %}">Главная страница</a>
+<a href="{% url 'mybooks' %}">Мои книги</a>
+<h1>Список моих книг</h1>
+
+{% if taken_books_with_days %}
+    <ul>
+        {% for item in taken_books_with_days %}
+        <li>
+            <a href="{{ item.book.get_absolute_url }}">{{ item.book.title }}</a> ({{ item.book.author }})
+            <p>Дата получения: {{ item.taken_date }}</p>
+            <p>На руках: {{ item.days_on_hand }} дней</p>
+{#            <form action="{% url 'return_book' item.book.id %}" method="post" style="display:inline;">#}
+{#                {% csrf_token %}#}
+{#                <button type="submit">Return Book</button>#}
+{#            </form>#}
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>У вас нет книг на руках.</p>
+{% endif %}
+
+{% endblock %}

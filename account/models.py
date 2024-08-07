@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+
+
 # Create your models here.
 class Reader(AbstractUser):
     username = models.CharField(max_length=355, unique=True)
@@ -28,4 +31,4 @@ class Books(models.Model):
 class TakenBooks(models.Model):
     reader = models.ForeignKey(Reader, on_delete=models.CASCADE)
     book = models.ForeignKey(Books, on_delete=models.CASCADE)
-    
+    taken_date = models.DateTimeField(default=timezone.now)

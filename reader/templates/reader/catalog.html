@@ -1,11 +1,13 @@
 {% extends 'account/layout.html' %}
 {% load static %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Главная страница{% endblock %}
 
 {% block content %}
-    <h1>Books List</h1>
 
+    <a href="{% url 'books' %}">Главная страница</a>
+    <a href="{% url 'mybooks' %}">Мои книги</a>
+    <h1>Список книг</h1>
     {% if books_list %}
     <ul>
         {% for book in books_list %}
