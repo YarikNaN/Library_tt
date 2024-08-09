@@ -3,6 +3,10 @@
 
 {% block title %}Главная страница{% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'reader/styles.css' %}">
+{% endblock %}
+
 {% block content %}
 
     <a href="{% url 'books' %}">Главная страница</a>
@@ -12,7 +16,9 @@
     <ul>
         {% for book in books_list %}
         <li>
-            <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{ book.author }})
+            <div style="display: flex; align-items: center; gap: 10px"><p class="title_fc">{{ book.title }}</p> <button class="copy_button">Копировать</button> </div> ({{ book.author }})
+
+
             {% if book.id in taken_books_ids %}
                 <form action="{% url 'return_book' book.id %}" method="post" style="display:inline;">
                     {% csrf_token %}
@@ -24,12 +30,24 @@
                     <button type="submit">Take Book</button>
                 </form>
             {% endif %}
+
+
         </li>
         {% endfor %}
     </ul>
     {% else %}
       <p>There are no books in the library.</p>
     {% endif %}
+
+                <div id="copyMessage" class="copy-message">
+                        Скопировано
+                    </div>
+
+
+
+
+    <script src="{% static 'reader/copy.js' %}"></script>
+
 {% endblock %}
 
 
