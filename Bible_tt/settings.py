@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-AUTH_USER_MODEL = 'account.Reader' # new
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'Bible_tt.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bible',
+        'NAME': 'library',
         'USER': 'postgres',
         'PASSWORD': 'root',
         'HOST': 'localhost',

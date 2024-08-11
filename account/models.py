@@ -1,15 +1,15 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, User
 from django.utils import timezone
 
 
 # Create your models here.
-class Reader(AbstractUser):
-    username = models.CharField(max_length=355, unique=True)
-    password = models.CharField(max_length=500)
+class Reader(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, default=1)
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=255)
     address = models.CharField(max_length=500)
+
 
 
 
