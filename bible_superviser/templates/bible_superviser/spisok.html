@@ -1,0 +1,31 @@
+{% extends 'account/layout.html' %}
+{% load static %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+
+
+    <h1>Список Должников</h1>
+
+
+
+    {% for reader_info in readers_with_books %}
+        <div><b>Юзернейм:</b> {{ reader_info.reader.user.username }}     <b>Имя:</b> {{ reader_info.reader.name }}     <b>Фамилия:</b> {{ reader_info.reader.surname }}    <b>Адрес:</b> {{ reader_info.reader.address }}</div>
+    <ul>
+        {% for book_info in reader_info.taken_books_with_days %}
+            <li>
+                {{ book_info.book.title }} - Взята: {{ book_info.taken_date }} - Дней на руках: {{ book_info.days_on_hand }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endfor %}
+
+
+
+
+
+{% endblock %}
+
+
+

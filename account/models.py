@@ -14,8 +14,7 @@ class Reader(models.Model):
 
 
 class BBviser(models.Model):
-    username = models.CharField(max_length=355)
-    password = models.CharField(max_length=500)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, default=1)
     tab_id = models.CharField(max_length=100)
 
 
