@@ -1,11 +1,14 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from .forms import LoginForm, UserRegistrationForm, SvRegistrationForm
 from django.core.cache import cache
-
+from django.contrib.auth.models import Group
 from .models import Reader
 
+def custom_logout(request):
+    logout(request)
+    return redirect('login')
 
 def user_login(request):
     # if request.user.is_authenticated:
@@ -18,7 +21,12 @@ def user_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return redirect('books')
+
+                    # Проверяем, состоит ли пользователь в группе Librarians
+                    if user.groups.filter(name='Librarians').exists():
+                        return redirect('debt')  # Редирект на debt для Librarians
+                    elif user.groups.filter(name='Readers').exists():
+                        return redirect('books')  # Редирект на books
                 else:
                     return HttpResponse('Disabled account')
             else:
@@ -37,7 +45,8 @@ def register(request):
             new_user = user_form.save()  # Тут false было когда в представлении обрабатывал, теперь в форме обрабатывается
             # Set the chosen password
             new_user.set_password(user_form.cleaned_data['password'])
-
+            readers_group = Group.objects.get(name='Readers')
+            readers_group.user_set.add(new_user)
             # new_user.save() в форме сохранение теперь
 
             # Now create a Reader instance linked to the new User
@@ -63,7 +72,8 @@ def svregister(request):
             new_user = user_form.save()  # Тут false было когда в представлении обрабатывал, теперь в форме обрабатывается
             # Set the chosen password
             new_user.set_password(user_form.cleaned_data['password'])
-
+            librarians_group = Group.objects.get(name='Librarians')
+            librarians_group.user_set.add(new_user)
             # new_user.save() в форме сохранение теперь
 
             # Now create a Reader instance linked to the new User

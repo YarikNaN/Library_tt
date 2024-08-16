@@ -8,10 +8,21 @@ from django.views import generic
 
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import UserPassesTestMixin
 
-class UsersListView(generic.ListView):
+# Проверка, является ли пользователь членом группы
+
+class UsersListView(UserPassesTestMixin, generic.ListView):
     model = Reader
     template_name = 'bible_superviser/spisok.html'
+
+    def test_func(self):
+        # Проверяем, состоит ли пользователь в группе Readers
+        return self.request.user.groups.filter(name='Librarians').exists()
+
+    def handle_no_permission(self):
+        # Перенаправляем на другую страницу или возвращаем ошибку
+        return redirect('books')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -9,7 +9,19 @@ from django.views import generic
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 
+from django.contrib.auth.decorators import login_required, user_passes_test
+
+# Проверка, является ли пользователь членом группы
+def group_required(*group_names):
+    def in_groups(user):
+        if user.is_authenticated:
+            if bool(user.groups.filter(name__in=group_names)):
+                return True
+        return False
+    return user_passes_test(in_groups)
+
 @login_required
+@group_required('Readers')
 def take_book(request, book_id):
     user = request.user
     book = Books.objects.get(id=book_id)
@@ -18,6 +30,7 @@ def take_book(request, book_id):
     return redirect('books')  # Redirect back to the book list
 
 @login_required
+@group_required('Readers')
 def return_book(request, book_id):
     user = request.user
     TakenBooks.objects.filter(reader_id=user.id, book_id=book_id).delete()
